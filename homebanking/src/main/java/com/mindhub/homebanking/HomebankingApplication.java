@@ -19,9 +19,9 @@ public class HomebankingApplication {
 		return (args -> {
 
 			Client client1 = new Client();
-			client1.setFirstName("Duff");
-			client1.setLastName("McKagan");
-			client1.setEmail("duffmckagan@mindhub.com");
+			client1.setFirstName("Melba");
+			client1.setLastName("Morel");
+			client1.setEmail("melbamorel@mindhub.com");
 
 			Client client2 = new Client();
 			client2.setFirstName("Axl");

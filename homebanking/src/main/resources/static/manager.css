@@ -1,0 +1,32 @@
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+}
+
+.col {
+    align-self: center;
+}
+
+.col h1 {
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 35px;
+
+}
+
+.btn:hover {
+    background-color: rgb(0, 0, 0);
+}
+
+.clientRestResponse {
+    margin-top: -420px;
+    padding-left: 100px;
+}
+
+.table-responsive h2 {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.clientRestResponse h2 {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}

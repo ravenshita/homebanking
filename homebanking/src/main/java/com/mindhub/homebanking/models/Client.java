@@ -6,8 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Client {
@@ -26,6 +29,9 @@ public class Client {
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
 
+    @OneToMany(mappedBy = "client")
+    private List<ClientLoan> loans;
+
 
     public Client (){}
 
@@ -42,6 +48,15 @@ public class Client {
     public void addAccount(Account account) {
         account.setClient(this);
         accounts.add(account);
+    }
+
+    public void addClientLoan (ClientLoan clientLoan) {
+        loans.add(clientLoan);
+        clientLoan.setClient(this);
+    }
+
+    public List<ClientLoan> getLoans() {
+        return loans;
     }
 
     public Long getId() {
@@ -71,5 +86,6 @@ public class Client {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }
 

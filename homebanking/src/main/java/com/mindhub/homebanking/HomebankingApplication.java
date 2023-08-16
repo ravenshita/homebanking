@@ -6,6 +6,7 @@ import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.repositories.LoanRepository;
 import com.mindhub.homebanking.repositories.ClientLoanRepository;
+import com.mindhub.homebanking.repositories.CardRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,7 +24,7 @@ public class HomebankingApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository){
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return (args -> {
 
 			Client client1 = new Client("Melba", "Morel", "melbamorel@mindhub.com");
@@ -51,6 +52,10 @@ public class HomebankingApplication {
 			ClientLoan clientLoan3 = new ClientLoan(100.000, 24, client2, loan2);
 			ClientLoan clientLoan4 = new ClientLoan(200.000, 36, client2, loan3);
 
+			Card card1 = new Card("4000 0012 3456 7899", 292, LocalDate.now(), LocalDate.now().plusYears(5), "Melba Morel", CardType.DEBIT, CardColor.GOLD);
+			Card card2 = new Card("5302 6101 2345 6769", 412, LocalDate.now(), LocalDate.now().plusYears(5), "Melba Morel", CardType.CREDIT, CardColor.TITANIUM);
+			Card card3 = new Card("4575 6568 5785 6787", 806, LocalDate.now(), LocalDate.now().plusYears(5), "Axl Rose", CardType.CREDIT, CardColor.SILVER);
+
 			clientRepository.save(client1);
 			clientRepository.save(client2);
 
@@ -69,6 +74,10 @@ public class HomebankingApplication {
 			account3.addTransaction(transaction5);
 			account3.addTransaction(transaction6);
 
+			client1.addCard(card1);
+			client1.addCard(card2);
+			client2.addCard(card3);
+
 			transactionRepository.save(transaction1);
 			transactionRepository.save(transaction2);
 			transactionRepository.save(transaction3);
@@ -85,10 +94,12 @@ public class HomebankingApplication {
 			clientLoanRepository.save(clientLoan3);
 			clientLoanRepository.save(clientLoan4);
 
+			cardRepository.save(card1);
+			cardRepository.save(card2);
+			cardRepository.save(card3);
+
 		});
 
 
 	}
-
-
 }

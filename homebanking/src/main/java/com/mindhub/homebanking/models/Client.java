@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Entity
 public class Client {
@@ -20,6 +19,7 @@ public class Client {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     private TransactionType type;
 
 
@@ -27,7 +27,7 @@ public class Client {
     private Set<Account> accounts = new HashSet<>();
 
     @OneToMany(mappedBy = "client")
-    private List<ClientLoan> loans;
+    private List<ClientLoan> clientLoans = new ArrayList<>();
 
     @OneToMany(mappedBy = "client")
     private List<Card> cards = new ArrayList<>();
@@ -35,10 +35,11 @@ public class Client {
 
     public Client (){}
 
-    public Client (String firstName, String lastName, String email){
+    public Client (String firstName, String lastName, String email, String password){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.password = password;
     }
 
     public Set<Account> getAccounts() {
@@ -57,13 +58,17 @@ public class Client {
         card.setClient(this);
     }
 
-    public void addClientLoan (ClientLoan clientLoan) {
-        loans.add(clientLoan);
+    public List<ClientLoan> getClientLoans() {
+        return clientLoans;
+    }
+
+    public void addClientLoan(ClientLoan clientLoan) {
+        clientLoans.add(clientLoan);
         clientLoan.setClient(this);
     }
 
     public List<ClientLoan> getLoans() {
-        return loans;
+        return clientLoans;
     }
 
     public Long getId() {
@@ -94,6 +99,13 @@ public class Client {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
 }
 

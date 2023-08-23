@@ -22,7 +22,7 @@ public class Loan {
     private List<Integer> payments = new ArrayList<>();
 
     @OneToMany(mappedBy = "loan")
-    private List<ClientLoan> clients;
+    private List<ClientLoan> clientLoans = new ArrayList<>();
 
     public Loan(){}
 
@@ -32,16 +32,17 @@ public class Loan {
         this.payments = payments;
     }
 
+    public List<ClientLoan> getClientLoans() {
+        return clientLoans;
+    }
+
     public void addClientLoan(ClientLoan clientLoan) {
-        clients.add(clientLoan);
+        clientLoans.add(clientLoan);
         clientLoan.setLoan(this);
     }
 
     public List<Integer> getPayments() {return payments;}
 
-    public List<ClientLoan> getClients() {
-        return clients;
-    }
 
     public Long getId() {
         return id;

@@ -5,5 +5,4 @@ public enum CardColor {
     SILVER,
     TITANIUM;
 
-    private CardColor color;
 }

@@ -13,7 +13,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +37,7 @@ public class HomebankingApplication {
 			Client client2 = new Client("Axl", "Rose", "axlrose@mindhub.com", passwordEncoder.encode("Thejungle66"));
 
 
-			Client client3 = new Client("admin", "admin", "admin@gmail.com", passwordEncoder.encode("123456"));
+			Client client3 = new Client("admin", "admin", "admin@mindhub.com", passwordEncoder.encode("admin"));
 
 
 			Account account1 = new Account("VIN001", LocalDate.now(), 5000.00);

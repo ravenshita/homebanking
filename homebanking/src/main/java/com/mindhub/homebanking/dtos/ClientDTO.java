@@ -14,9 +14,7 @@ public class ClientDTO {
         private String email;
         private String password;
         private Set<AccountDTO> accounts;
-
         private List<ClientLoanDTO> loans;
-
         private List<CardDTO> cards;
 
         public ClientDTO(Client client) {

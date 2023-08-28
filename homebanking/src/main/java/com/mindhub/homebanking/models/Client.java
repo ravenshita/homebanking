@@ -22,7 +22,6 @@ public class Client {
     private String password;
     private TransactionType type;
 
-
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
 
@@ -31,7 +30,6 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private List<Card> cards = new ArrayList<>();
-
 
     public Client (){}
 
@@ -65,6 +63,16 @@ public class Client {
     public void addClientLoan(ClientLoan clientLoan) {
         clientLoans.add(clientLoan);
         clientLoan.setClient(this);
+    }
+
+    private boolean isAdmin;
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     public List<ClientLoan> getLoans() {

@@ -40,11 +40,11 @@ public class HomebankingApplication {
 			Client client3 = new Client("admin", "admin", "admin@mindhub.com", passwordEncoder.encode("admin"));
 
 
-			Account account1 = new Account("VIN001", LocalDate.now(), 5000.00);
+			Account account1 = new Account("VIN-001", LocalDate.now(), 5000.00);
 
-			Account account2 = new Account("VIN002", LocalDate.now().plusDays(1),7500.00);
+			Account account2 = new Account("VIN-002", LocalDate.now().plusDays(1),7500.00);
 
-			Account account3 = new Account("VIN003", LocalDate.now(), 7777.00);
+			Account account3 = new Account("VIN-003", LocalDate.now(), 7777.00);
 
 			Transaction transaction1 = new Transaction(TransactionType.DEBITO, -1000.00, "Gucci Store", LocalDateTime.now());
 			Transaction transaction2 = new Transaction(TransactionType.CREDITO, +3500.50, "Happy Birthday!", LocalDateTime.now());

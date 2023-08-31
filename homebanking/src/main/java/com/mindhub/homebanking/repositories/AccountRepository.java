@@ -10,4 +10,6 @@ import java.util.List;
 public interface AccountRepository extends JpaRepository<Account, Long> {
     List<Account> findByClientLastName(String lastName);
 
+    Account findByNumber(String number);
+
 }

@@ -115,5 +115,6 @@ public class Client {
         this.password = password;
     }
 
+/*    public List<Transaction> getTransactions() {return transactions;}*/
 }
 

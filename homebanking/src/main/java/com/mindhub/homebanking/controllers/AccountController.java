@@ -22,6 +22,9 @@ public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private ClientRepository clientRepository;
+
     @GetMapping("/accounts")
     public List<AccountDTO> getAccounts() {
         return accountRepository.findAll().stream().map( account ->
@@ -34,9 +37,6 @@ public class AccountController {
         return accountRepository.findById(id).map(AccountDTO::new).orElse(null);
     }
 
-  @Autowired
-    private ClientRepository clientRepository;
-
     @PreAuthorize("hasAuthority('CLIENT')")
     @PostMapping("/clients/current/accounts")
 
@@ -48,6 +48,7 @@ public class AccountController {
         }
 
         Random random = new Random();
+
         String accountNumber = "VIN-" + (random.nextInt(900000) + 100000);
 
         Account newAccount = new Account(accountNumber, LocalDate.now(), 0.0 );

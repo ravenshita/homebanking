@@ -25,9 +25,6 @@ public class AccountController {
     private ClientRepository clientRepository;
 
     @Autowired
-    ClientService clientService;
-
-    @Autowired
     AccountService accountService;
 
     @GetMapping("/accounts")

@@ -29,12 +29,6 @@ public class LoanController {
     private ClientRepository clientRepository;
 
     @Autowired
-    private TransactionRepository transactionRepository;
-
-    @Autowired
-    ClientService clientService;
-
-    @Autowired
     AccountService accountService;
 
     @Autowired
@@ -45,7 +39,6 @@ public class LoanController {
 
     @Transactional
     @PreAuthorize("hasAuthority('CLIENT')")
-
     @PostMapping(value ="/loans")
     public ResponseEntity<Object> applyForLoan(@RequestBody LoanApplicationDTO loanApplicationDTO, Authentication authentication) {
 

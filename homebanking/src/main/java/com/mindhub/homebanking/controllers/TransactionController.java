@@ -12,6 +12,7 @@ import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.repositories.TransactionRepository;
 import com.mindhub.homebanking.services.AccountService;
 import com.mindhub.homebanking.services.ClientService;
+import com.mindhub.homebanking.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,17 +32,11 @@ public class TransactionController {
 
     @Autowired
     private ClientRepository clientRepository;
-    @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
-    private TransactionRepository transactionRepository;
-
-    @Autowired
-    private ClientService clientService;
 
     @Autowired
     private AccountService accountService;
-
+    @Autowired
+    private TransactionService transactionService;
 
     @Transactional
     @PreAuthorize("hasAuthority('CLIENT')")
@@ -51,11 +46,6 @@ public class TransactionController {
             @RequestParam String fromAccountNumber, @RequestParam String toAccountNumber,
             @RequestParam Double amount, @RequestParam String description,
             Authentication authentication) {
-
-        Client client = clientRepository.findByEmail(authentication.getName());
-        Account accountFromNumber = accountService.findByAccountNumber(fromAccountNumber);
-        Account accountToNumber = accountService.findByAccountNumber(toAccountNumber);
-
 
         if (amount == null) {
             return new ResponseEntity<>("Amount is missing.", HttpStatus.FORBIDDEN);
@@ -68,6 +58,14 @@ public class TransactionController {
         if (fromAccountNumber == null || toAccountNumber == null) {
             return new ResponseEntity<>("Source or target account not found.", HttpStatus.FORBIDDEN);
         }
+
+        if (amount <= 0 ) {
+            return new ResponseEntity<>("Amount cannot be less then 0.", HttpStatus.FORBIDDEN);
+        }
+
+        Client client = clientRepository.findByEmail(authentication.getName());
+        Account accountFromNumber = accountService.findByAccountNumber(fromAccountNumber);
+        Account accountToNumber = accountService.findByAccountNumber(toAccountNumber);
 
         if (fromAccountNumber.equals(toAccountNumber)) {
             return new ResponseEntity<>("Source and target accounts cannot be the same.", HttpStatus.FORBIDDEN);
@@ -90,19 +88,17 @@ public class TransactionController {
         accountFromNumber.setBalance(accountFromNumber.getBalance() - amount);
         accountToNumber.setBalance(accountToNumber.getBalance() + amount);
 
-        accountRepository.save(accountFromNumber);
-        accountRepository.save(accountToNumber);
-        transactionRepository.save(debitTransaction);
-        transactionRepository.save(creditTransaction);
+        accountService.saveAccount(accountFromNumber);
+        accountService.saveAccount(accountToNumber);
+        transactionService.saveTransaction(debitTransaction);
+        transactionService.saveTransaction(creditTransaction);
 
         return new ResponseEntity<>( HttpStatus.CREATED);
-
     }
 
     @GetMapping("/transactions")
     public ResponseEntity<List<TransactionDTO>> getTransactionsForCurrentClient(Authentication authentication) {
         Client client = clientRepository.findByEmail(authentication.getName());
-
         List<TransactionDTO> transactionDTOs = client.getAccounts().stream()
                 .flatMap(account -> account.getTransactions().stream())
                 .map(TransactionDTO::new)

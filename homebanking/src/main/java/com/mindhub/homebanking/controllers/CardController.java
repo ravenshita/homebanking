@@ -7,6 +7,9 @@ import com.mindhub.homebanking.models.CardType;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.CardRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
+/*import com.mindhub.homebanking.services.CardService;*/
+import com.mindhub.homebanking.services.CardService;
+import com.mindhub.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +27,7 @@ public class CardController {
     private ClientRepository clientRepository;
 
     @Autowired
-    private CardRepository cardRepository;
+    private CardService cardService;
 
     @PostMapping("/clients/current/cards")
     public ResponseEntity<Object> createCard(@RequestParam CardColor color,
@@ -59,7 +62,7 @@ public class CardController {
 
         Card newCard = new Card(number, cvv, fromDate, thruDate, cardholder, type, color);
         newCard.setClient(client);
-        cardRepository.save(newCard);
+        cardService.saveCard(newCard);
 
         CardDTO newCardDTO = new CardDTO(newCard);
         return new ResponseEntity<>(newCardDTO, HttpStatus.CREATED);
@@ -69,9 +72,9 @@ public class CardController {
     @GetMapping("/clients/current/cards")
     public ResponseEntity<List<CardDTO>> getClientCards(Authentication authentication) {
         Client client = clientRepository.findByEmail(authentication.getName());
-
         List<Card> cards = client.getCards();
         List<CardDTO> cardDTOs = cards.stream().map(CardDTO::new).collect(Collectors.toList());
         return new ResponseEntity<>(cardDTOs, HttpStatus.OK);
     }
+
 }

@@ -25,8 +25,8 @@ public class Client {
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
     private Set<Account> accounts = new HashSet<>();
 
-    @OneToMany(mappedBy = "client")
-    private List<ClientLoan> clientLoans = new ArrayList<>();
+    @OneToMany(mappedBy = "client", fetch=FetchType.EAGER)
+    private List<ClientLoan> loans = new ArrayList<>();
 
     @OneToMany(mappedBy = "client")
     private List<Card> cards = new ArrayList<>();
@@ -56,15 +56,6 @@ public class Client {
         card.setClient(this);
     }
 
-    public List<ClientLoan> getClientLoans() {
-        return clientLoans;
-    }
-
-    public void addClientLoan(ClientLoan clientLoan) {
-        clientLoans.add(clientLoan);
-        clientLoan.setClient(this);
-    }
-
     private boolean isAdmin;
 
     public boolean isAdmin() {
@@ -76,7 +67,7 @@ public class Client {
     }
 
     public List<ClientLoan> getLoans() {
-        return clientLoans;
+        return loans;
     }
 
     public Long getId() {
@@ -115,6 +106,5 @@ public class Client {
         this.password = password;
     }
 
-/*    public List<Transaction> getTransactions() {return transactions;}*/
 }
 

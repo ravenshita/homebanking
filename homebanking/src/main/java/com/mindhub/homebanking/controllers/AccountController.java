@@ -5,6 +5,8 @@ import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
+import com.mindhub.homebanking.services.AccountService;
+import com.mindhub.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,27 +16,28 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class AccountController {
-    @Autowired
-    private AccountRepository accountRepository;
 
     @Autowired
     private ClientRepository clientRepository;
 
+    @Autowired
+    ClientService clientService;
+
+    @Autowired
+    AccountService accountService;
+
     @GetMapping("/accounts")
     public List<AccountDTO> getAccounts() {
-        return accountRepository.findAll().stream().map( account ->
-             new AccountDTO(account)
-        ).collect(Collectors.toList());
+        return accountService.getAccounts();
     }
 
     @GetMapping("/accounts/{id}")
     public AccountDTO getAccount(@PathVariable Long id) {
-        return accountRepository.findById(id).map(AccountDTO::new).orElse(null);
+        return accountService.getAccount(id);
     }
 
     @PreAuthorize("hasAuthority('CLIENT')")
@@ -53,7 +56,7 @@ public class AccountController {
 
         Account newAccount = new Account(accountNumber, LocalDate.now(), 0.0 );
         newAccount.setClient(client);
-        accountRepository.save(newAccount);
+        accountService.saveAccount(newAccount);
 
         AccountDTO newAccountDTO = new AccountDTO(newAccount);
         return new ResponseEntity<>(newAccountDTO, HttpStatus.CREATED);
@@ -61,13 +64,8 @@ public class AccountController {
     }
 
     @GetMapping("/clients/current/accounts")
-    public ResponseEntity<List<AccountDTO>> getAccountsForCurrentClient(Authentication authentication) {
-        Client client = clientRepository.findByEmail(authentication.getName());
-
-        List<AccountDTO> accountDTOs = client.getAccounts().stream()
-                .map(AccountDTO::new)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(accountDTOs, HttpStatus.OK);
+    public List<AccountDTO> getAccountsForCurrentClient(Authentication authentication) {
+        return accountService.getAccountsForCurrentClient(authentication);
     }
 
 }

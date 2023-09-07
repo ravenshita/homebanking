@@ -46,12 +46,12 @@ public class HomebankingApplication {
 
 			Account account3 = new Account("VIN-003", LocalDate.now(), 7777.00);
 
-			Transaction transaction1 = new Transaction(TransactionType.DEBITO, -1000.00, "Gucci Store", LocalDateTime.now());
-			Transaction transaction2 = new Transaction(TransactionType.CREDITO, +3500.50, "Happy Birthday!", LocalDateTime.now());
-			Transaction transaction3 = new Transaction(TransactionType.DEBITO, -800.20, "Too faced store", LocalDateTime.now());
-			Transaction transaction4 = new Transaction(TransactionType.CREDITO, +5000.00, "Payday", LocalDateTime.now());
-			Transaction transaction5 = new Transaction(TransactionType.CREDITO, 10000.00, "South America Tour", LocalDateTime.now());
-			Transaction transaction6 = new Transaction(TransactionType.DEBITO, -260.00, "Johnnie Walker Blue Label", LocalDateTime.now());
+			Transaction transaction1 = new Transaction(TransactionType.DEBIT, -1000.00, "Gucci Store", LocalDateTime.now());
+			Transaction transaction2 = new Transaction(TransactionType.CREDIT, +3500.50, "Happy Birthday!", LocalDateTime.now());
+			Transaction transaction3 = new Transaction(TransactionType.DEBIT, -800.20, "Too faced store", LocalDateTime.now());
+			Transaction transaction4 = new Transaction(TransactionType.CREDIT, +5000.00, "Payday", LocalDateTime.now());
+			Transaction transaction5 = new Transaction(TransactionType.CREDIT, 10000.00, "South America Tour", LocalDateTime.now());
+			Transaction transaction6 = new Transaction(TransactionType.DEBIT, -260.00, "Johnnie Walker Blue Label", LocalDateTime.now());
 
             Loan loan1 = new Loan("Mortgage", 500000.00, List.of(12,24,36,48,60));
 			Loan loan2 = new Loan("Personal", 100000.00, List.of( 6,12,24));

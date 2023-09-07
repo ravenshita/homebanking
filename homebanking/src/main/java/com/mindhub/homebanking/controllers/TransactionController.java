@@ -1,6 +1,7 @@
 package com.mindhub.homebanking.controllers;
 
 import com.mindhub.homebanking.dtos.AccountDTO;
+import com.mindhub.homebanking.dtos.ClientDTO;
 import com.mindhub.homebanking.dtos.TransactionDTO;
 import com.mindhub.homebanking.models.Account;
 import com.mindhub.homebanking.models.Client;
@@ -9,6 +10,8 @@ import com.mindhub.homebanking.models.TransactionType;
 import com.mindhub.homebanking.repositories.AccountRepository;
 import com.mindhub.homebanking.repositories.ClientRepository;
 import com.mindhub.homebanking.repositories.TransactionRepository;
+import com.mindhub.homebanking.services.AccountService;
+import com.mindhub.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,25 +28,33 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api")
 public class TransactionController {
+
+    @Autowired
+    private ClientRepository clientRepository;
     @Autowired
     private AccountRepository accountRepository;
     @Autowired
     private TransactionRepository transactionRepository;
+
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
+
+    @Autowired
+    private AccountService accountService;
+
 
     @Transactional
     @PreAuthorize("hasAuthority('CLIENT')")
     @PostMapping("/transactions")
 
-    public ResponseEntity<Object> register(
+    public ResponseEntity<Object> transactions(
             @RequestParam String fromAccountNumber, @RequestParam String toAccountNumber,
             @RequestParam Double amount, @RequestParam String description,
             Authentication authentication) {
 
         Client client = clientRepository.findByEmail(authentication.getName());
-        Account accountFromNumber = accountRepository.findByNumber(fromAccountNumber);
-        Account accountToNumber = accountRepository.findByNumber(toAccountNumber);
+        Account accountFromNumber = accountService.findByAccountNumber(fromAccountNumber);
+        Account accountToNumber = accountService.findByAccountNumber(toAccountNumber);
 
 
         if (amount == null) {
@@ -59,7 +70,7 @@ public class TransactionController {
         }
 
         if (fromAccountNumber.equals(toAccountNumber)) {
-            return ResponseEntity.badRequest().body("Source and target accounts cannot be the same.");
+            return new ResponseEntity<>("Source and target accounts cannot be the same.", HttpStatus.FORBIDDEN);
         }
 
         if (!accountFromNumber.getClient().equals(client)) {
@@ -70,10 +81,10 @@ public class TransactionController {
             return new ResponseEntity<>("Insufficient balance.", HttpStatus.FORBIDDEN);
         }
 
-        Transaction debitTransaction = new Transaction(TransactionType.DEBITO, amount, description, LocalDateTime.now());
+        Transaction debitTransaction = new Transaction(TransactionType.DEBIT, amount, description, LocalDateTime.now());
         accountFromNumber.addTransaction(debitTransaction);
 
-        Transaction creditTransaction = new Transaction(TransactionType.CREDITO, amount, description, LocalDateTime.now());
+        Transaction creditTransaction = new Transaction(TransactionType.CREDIT, amount, description, LocalDateTime.now());
         accountToNumber.addTransaction(creditTransaction);
 
         accountFromNumber.setBalance(accountFromNumber.getBalance() - amount);
@@ -96,7 +107,6 @@ public class TransactionController {
                 .flatMap(account -> account.getTransactions().stream())
                 .map(TransactionDTO::new)
                 .collect(Collectors.toList());
-
         return new ResponseEntity<>(transactionDTOs, HttpStatus.OK);
     }
 

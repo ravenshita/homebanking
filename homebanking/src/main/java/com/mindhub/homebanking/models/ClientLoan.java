@@ -35,7 +35,7 @@ public class ClientLoan {
 
     public void addClient(Client client) {
         this.client = client;
-        client.getClientLoans().add(this);
+        client.getLoans().add(this);
     }
 
     public Long getId() {

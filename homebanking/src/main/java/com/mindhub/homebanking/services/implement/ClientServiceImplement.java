@@ -20,15 +20,28 @@ public class ClientServiceImplement implements ClientService {
     public List<ClientDTO> getAllClients() {
         return clientRepository.findAll().stream().map(ClientDTO::new).collect(Collectors.toList());
     }
+
     @Override
     public ClientDTO getClientById(Long id) {
         return clientRepository.findById(id).map(ClientDTO::new).orElse(null);
     }
+
     @Override
-    public ClientDTO getAuthenticatedClient(String email) {
-        Client client = clientRepository.findByEmail(email);
+    public  Client getClientByEmail(String email){
+        return clientRepository.findByEmail(email);
+    }
+
+    @Override
+    public ClientDTO getAuthenticatedClientDTO(Authentication authentication) {
+        Client client = clientRepository.findByEmail(authentication.getName());
         return new ClientDTO(client);
     }
+
+    @Override
+    public Client getAuthenticatedClient(Authentication authentication){
+        return clientRepository.findByEmail(authentication.getName());
+    }
+
     @Override
     public void saveClient(Client newClient) {
         clientRepository.save(newClient);

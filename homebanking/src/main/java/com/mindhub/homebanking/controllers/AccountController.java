@@ -22,7 +22,7 @@ import java.util.Random;
 public class AccountController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientservice;
 
     @Autowired
     AccountService accountService;
@@ -41,7 +41,7 @@ public class AccountController {
     @PostMapping("/clients/current/accounts")
 
     public ResponseEntity<Object> createAccount(Authentication authentication) {
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientservice.getAuthenticatedClient(authentication);
 
         if (client.getAccounts().size() >= 3) {
             return new ResponseEntity<>("Client already has 3 accounts", HttpStatus.FORBIDDEN);

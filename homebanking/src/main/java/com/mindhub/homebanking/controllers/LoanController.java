@@ -3,13 +3,7 @@ package com.mindhub.homebanking.controllers;
 import com.mindhub.homebanking.dtos.LoanApplicationDTO;
 import com.mindhub.homebanking.dtos.LoanDTO;
 import com.mindhub.homebanking.models.*;
-import com.mindhub.homebanking.repositories.ClientRepository;
-import com.mindhub.homebanking.repositories.LoanRepository;
-import com.mindhub.homebanking.repositories.TransactionRepository;
-import com.mindhub.homebanking.services.AccountService;
-import com.mindhub.homebanking.services.ClientService;
-import com.mindhub.homebanking.services.LoanService;
-import com.mindhub.homebanking.services.TransactionService;
+import com.mindhub.homebanking.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,20 +13,22 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
 public class LoanController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
     AccountService accountService;
 
     @Autowired
     LoanService loanService;
+
+    @Autowired
+    ClientLoanService clientLoanService;
 
     @Autowired
     TransactionService transactionService;
@@ -44,7 +40,7 @@ public class LoanController {
 
         Loan loan = loanService.getLoanById(loanApplicationDTO.getLoanId());
         Account accountToNumber = accountService.findByAccountNumber(loanApplicationDTO.getToAccountNumber());
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.getAuthenticatedClient(authentication);
 
         if (loanApplicationDTO.getAmount() <= 0) {
             return new ResponseEntity<>("Amount is less then zero.", HttpStatus.FORBIDDEN);
@@ -84,14 +80,15 @@ public class LoanController {
         accountToNumber.addTransaction(creditTransaction);
         accountService.saveAccount(accountToNumber);
         transactionService.saveTransaction(creditTransaction);
+        ClientLoan clientLoan = new ClientLoan(loanApplicationDTO.getAmount(), loanApplicationDTO.getPayments());
+        loan.addClientLoan(clientLoan);
+        client.addClientLoan(clientLoan);
+        clientLoanService.saveClientLoan(clientLoan);
 
         return new ResponseEntity<>( HttpStatus.CREATED);
 
     }
     @GetMapping("/loans")
-    public List<LoanDTO> getLoans() {
-        List<Loan> loans = loanService.getAllLoans();
-        return loans.stream().map(loan -> new LoanDTO(loan)).collect(Collectors.toList());
-    }
+    public List<LoanDTO> getLoans() {return loanService.getAllLoans(); }
 
 }

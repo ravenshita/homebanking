@@ -30,18 +30,6 @@ public class Loan {
         this.payments = payments;
     }
 
-    public List<ClientLoan> getClientLoans() {
-        return clientLoans;
-    }
-
-    public void addClientLoan(ClientLoan clientLoan) {
-        clientLoans.add(clientLoan);
-        clientLoan.setLoan(this);
-    }
-
-    public List<Integer> getPayments() {return payments;}
-
-
     public Long getId() {
         return id;
     }
@@ -61,5 +49,18 @@ public class Loan {
     public void setMaxAmount(Double maxAmount) {
         this.maxAmount = maxAmount;
     }
+
+
+    public List<ClientLoan> getClientLoans() {
+        return clientLoans;
+    }
+
+    public void addClientLoan(ClientLoan clientLoan) {
+        clientLoans.add(clientLoan);
+        clientLoan.setLoan(this);
+    }
+
+    public List<Integer> getPayments() {return payments;}
+
 
 }

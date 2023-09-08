@@ -49,7 +49,7 @@ public class ClientController {
 
             @RequestParam String email, @RequestParam String password)
 
-             {
+    {
 
         List<String> errorMessages = new ArrayList<>();
 
@@ -73,20 +73,20 @@ public class ClientController {
             return new ResponseEntity<>(errorMessages, HttpStatus.BAD_REQUEST);
         }
 
-        if (clientService.getAuthenticatedClient(email) !=  null) {
+        if (clientService.getClientByEmail(email) !=  null) {
 
             return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
 
         }
-                 Client newClient = new Client(firstName, lastName, email, passwordEncoder.encode(password));
-                 clientService.saveClient(newClient);
+        Client newClient = new Client(firstName, lastName, email, passwordEncoder.encode(password));
+        clientService.saveClient(newClient);
 
-                 Random random = new Random();
-                 String accountNumber = "VIN-" + (random.nextInt(900000) + 100000);
+        Random random = new Random();
+        String accountNumber = "VIN-" + (random.nextInt(900000) + 100000);
 
-                 Account newAccount = new Account(accountNumber, LocalDate.now(), 0.0);
-                 newAccount.setClient(newClient);
-                 accountService.saveAccount(newAccount);
+        Account newAccount = new Account(accountNumber, LocalDate.now(), 0.0);
+        newAccount.setClient(newClient);
+        accountService.saveAccount(newAccount);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
 
@@ -94,7 +94,7 @@ public class ClientController {
 
     @GetMapping("/clients/current")
     public ClientDTO getCurrentClient(Authentication authentication) {
-        return clientService.getAuthenticatedClient(authentication.getName());
+        return clientService.getAuthenticatedClientDTO(authentication);
     }
 
 }

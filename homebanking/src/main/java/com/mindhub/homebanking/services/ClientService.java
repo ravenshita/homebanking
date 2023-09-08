@@ -13,7 +13,11 @@ public interface ClientService {
 
     ClientDTO getClientById(Long id);
 
-    ClientDTO getAuthenticatedClient(String email);
+    Client getClientByEmail(String email);
+
+    ClientDTO getAuthenticatedClientDTO(Authentication authentication);
+
+    Client getAuthenticatedClient(Authentication authentication);
 
     void saveClient(Client newClient);
 }

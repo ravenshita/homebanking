@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class TransactionController {
 
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
     private AccountService accountService;
@@ -63,7 +63,7 @@ public class TransactionController {
             return new ResponseEntity<>("Amount cannot be less then 0.", HttpStatus.FORBIDDEN);
         }
 
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.getAuthenticatedClient(authentication);
         Account accountFromNumber = accountService.findByAccountNumber(fromAccountNumber);
         Account accountToNumber = accountService.findByAccountNumber(toAccountNumber);
 
@@ -98,7 +98,7 @@ public class TransactionController {
 
     @GetMapping("/transactions")
     public ResponseEntity<List<TransactionDTO>> getTransactionsForCurrentClient(Authentication authentication) {
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.getAuthenticatedClient(authentication);
         List<TransactionDTO> transactionDTOs = client.getAccounts().stream()
                 .flatMap(account -> account.getTransactions().stream())
                 .map(TransactionDTO::new)

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class CardController {
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @Autowired
     private CardService cardService;
@@ -34,7 +34,7 @@ public class CardController {
                                              @RequestParam CardType type,
                                              Authentication authentication) {
 
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.getAuthenticatedClient(authentication);
 
         if (client.getCards().stream().filter(card -> card.getType() == type).count() >= 3) {
             return new ResponseEntity<>("Client already has 3 cards of this type", HttpStatus.FORBIDDEN);
@@ -71,7 +71,7 @@ public class CardController {
 
     @GetMapping("/clients/current/cards")
     public ResponseEntity<List<CardDTO>> getClientCards(Authentication authentication) {
-        Client client = clientRepository.findByEmail(authentication.getName());
+        Client client = clientService.getAuthenticatedClient(authentication);
         List<Card> cards = client.getCards();
         List<CardDTO> cardDTOs = cards.stream().map(CardDTO::new).collect(Collectors.toList());
         return new ResponseEntity<>(cardDTOs, HttpStatus.OK);

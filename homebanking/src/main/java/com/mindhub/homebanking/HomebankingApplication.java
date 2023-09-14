@@ -27,17 +27,17 @@ public class HomebankingApplication {
 		SpringApplication.run(HomebankingApplication.class, args);
 	}
 
-	/*@Bean
+	@Bean
 	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return (args -> {
 
-			Client client1 = new Client("Melba", "Morel", "melba@mindhub.com", passwordEncoder.encode("melba"));
+			Client client1 = new Client("Melba", "Morel", "melba@mindhub.com", passwordEncoder.encode("melba"), RolType.CLIENT );
 
 
-			Client client2 = new Client("Axl", "Rose", "axlrose@mindhub.com", passwordEncoder.encode("Thejungle66"));
+			Client client2 = new Client("Axl", "Rose", "axlrose@mindhub.com", passwordEncoder.encode("Thejungle66"), RolType.CLIENT);
 
 
-			Client client3 = new Client("admin", "admin", "admin@mindhub.com", passwordEncoder.encode("admin"));
+			Client client3 = new Client("admin", "admin", "admin@mindhub.com", passwordEncoder.encode("admin"), RolType.ADMIN);
 
 
 			Account account1 = new Account("VIN-001", LocalDate.now(), 5000.00);
@@ -62,9 +62,9 @@ public class HomebankingApplication {
 			ClientLoan clientLoan3 = new ClientLoan(100.000, 24);
 			ClientLoan clientLoan4 = new ClientLoan(200.000, 36);
 
-			Card card1 = new Card("4000 0012 3456 7899", 292, LocalDate.now(), LocalDate.now().plusYears(5), "Melba Morel", CardType.DEBIT, CardColor.GOLD);
-			Card card2 = new Card("5302 6101 2345 6769", 412, LocalDate.now(), LocalDate.now().plusYears(5), "Melba Morel", CardType.CREDIT, CardColor.TITANIUM);
-			Card card3 = new Card("4575 6568 5785 6787", 806, LocalDate.now(), LocalDate.now().plusYears(5), "Axl Rose", CardType.CREDIT, CardColor.SILVER);
+			Card card1 = new Card("4000 0012 3456 7899", 292, LocalDate.now(), LocalDate.now().plusYears(5), "Melba Morel", CardType.DEBIT, CardColor.GOLD, true);
+			Card card2 = new Card("5302 6101 2345 6769", 412, LocalDate.now(), LocalDate.now().plusYears(5), "Melba Morel", CardType.CREDIT, CardColor.TITANIUM, true);
+			Card card3 = new Card("4575 6568 5785 6787", 806, LocalDate.now(), LocalDate.now().plusYears(5), "Axl Rose", CardType.CREDIT, CardColor.SILVER, true);
 
 			clientRepository.save(client1);
 			clientRepository.save(client2);
@@ -109,7 +109,7 @@ public class HomebankingApplication {
 			cardRepository.save(card2);
 			cardRepository.save(card3);
 
-		});*/
+		});
 
-	/*}*/
+	}
 }

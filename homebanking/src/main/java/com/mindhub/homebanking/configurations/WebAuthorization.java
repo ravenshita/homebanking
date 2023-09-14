@@ -26,6 +26,7 @@ public class WebAuthorization {
             .antMatchers("/web/accounts.html").hasAuthority("CLIENT")
             .antMatchers("/web/cards.html").hasAuthority("CLIENT")
             .antMatchers("/web/create-cards.html").hasAuthority("CLIENT")
+            .antMatchers("/web/deactivate-cards.html").hasAuthority("CLIENT")
             .antMatchers("/web/transfers.html").hasAuthority("CLIENT")
             .antMatchers("/web/loan-application.html").hasAuthority("CLIENT")
             .antMatchers("/api/clients/current").hasAuthority("CLIENT")
@@ -36,7 +37,9 @@ public class WebAuthorization {
             .antMatchers("/api/clients/{id}").hasAuthority("ADMIN")
             .antMatchers("/admin/**").hasAuthority("ADMIN")
             .antMatchers("/rest/**").hasAuthority("ADMIN")
-            .antMatchers("/h2-console/**").hasAuthority("ADMIN");
+            .antMatchers("/h2-console/**").hasAuthority("ADMIN")
+            .antMatchers("/manager.html").hasAuthority("ADMIN")
+            .antMatchers("manager.js").hasAuthority("ADMIN");
     http.formLogin()
             .usernameParameter("email")
             .passwordParameter("password")
@@ -59,9 +62,7 @@ public class WebAuthorization {
         if (session != null) {
 
             session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-
         }
-
     }
 
 }

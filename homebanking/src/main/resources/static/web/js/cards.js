@@ -8,14 +8,6 @@ Vue.createApp({
             errorMsg: null,
         }
     },
-    computed: {
-        activeCreditCards(){
-            return this.creditCards?.filter(card => card.active) ?? [];
-        },
-        activeDebitCards(){
-            return this.debitCards?.filter(card => card.active) ?? [];
-        }
-    },
     methods: {
         getData: function () {
             axios.get("/api/clients/current")
@@ -24,7 +16,6 @@ Vue.createApp({
                     this.clientInfo = response.data;
                     this.creditCards = this.clientInfo.cards.filter(card => card.type == "CREDIT");
                     this.debitCards = this.clientInfo.cards.filter(card => card.type == "DEBIT");
-                    console.log(this.creditCards);
                 })
                 .catch((error) => {
                     this.errorMsg = "Error getting data";

@@ -5,11 +5,15 @@ import com.mindhub.homebanking.models.Card;
 import com.mindhub.homebanking.models.CardColor;
 import com.mindhub.homebanking.models.CardType;
 import com.mindhub.homebanking.models.Client;
+import com.mindhub.homebanking.repositories.CardRepository;
+import com.mindhub.homebanking.repositories.ClientRepository;
+/*import com.mindhub.homebanking.services.CardService;*/
 import com.mindhub.homebanking.services.CardService;
 import com.mindhub.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,14 +28,6 @@ public class CardController {
 
     @Autowired
     private CardService cardService;
-
-    @GetMapping("/clients/current/cards")
-    public ResponseEntity<List<CardDTO>> getClientCards(Authentication authentication) {
-        Client client = clientService.getAuthenticatedClient(authentication);
-        List<Card> cards = client.getCards();
-        List<CardDTO> cardDTOs = cards.stream().map(CardDTO::new).collect(Collectors.toList());
-        return new ResponseEntity<>(cardDTOs, HttpStatus.OK);
-    }
 
     @PostMapping("/clients/current/cards")
     public ResponseEntity<Object> createCard(@RequestParam CardColor color,
@@ -64,7 +60,7 @@ public class CardController {
         LocalDate fromDate = LocalDate.now();
         LocalDate thruDate = fromDate.plusYears(5);
 
-        Card newCard = new Card(number, cvv, fromDate, thruDate, cardholder, type, color, true);
+        Card newCard = new Card(number, cvv, fromDate, thruDate, cardholder, type, color);
         newCard.setClient(client);
         cardService.saveCard(newCard);
 
@@ -73,21 +69,12 @@ public class CardController {
 
     }
 
-    @PatchMapping(path = "/clients/current/cards")
-    public ResponseEntity<String> deactivateCard (@RequestParam String number, Authentication authentication) {
-
+    @GetMapping("/clients/current/cards")
+    public ResponseEntity<List<CardDTO>> getClientCards(Authentication authentication) {
         Client client = clientService.getAuthenticatedClient(authentication);
-        Card card = cardService.findByNumber(number);
-
-        if (card == null || !card.getClient().equals(client)) {
-            return new ResponseEntity<>("Card not found or does not belong to the authenticated client", HttpStatus.NOT_FOUND);
-        }
-
-        card.setActive(false);
-        cardService.saveCard(card);
-
-        return new ResponseEntity<>("Card deactivated successfully", HttpStatus.OK);
-
+        List<Card> cards = client.getCards();
+        List<CardDTO> cardDTOs = cards.stream().map(CardDTO::new).collect(Collectors.toList());
+        return new ResponseEntity<>(cardDTOs, HttpStatus.OK);
     }
 
 }

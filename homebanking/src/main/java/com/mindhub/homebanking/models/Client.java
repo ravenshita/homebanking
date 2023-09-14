@@ -20,7 +20,6 @@ public class Client {
     private String lastName;
     private String email;
     private String password;
-    private RolType rol;
     private TransactionType type;
 
     @OneToMany(mappedBy="client", fetch=FetchType.EAGER)
@@ -34,12 +33,11 @@ public class Client {
 
     public Client (){}
 
-    public Client (String firstName, String lastName, String email, String password, RolType rol){
+    public Client (String firstName, String lastName, String email, String password){
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.rol = rol;
     }
 
     public Set<Account> getAccounts() {
@@ -65,6 +63,16 @@ public class Client {
     public void addClientLoan(ClientLoan clientLoan) {
         clientLoans.add(clientLoan);
         clientLoan.setClient(this);
+    }
+
+    private boolean isAdmin;
+
+    public boolean isAdmin() {
+        return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     public List<ClientLoan> getLoans() {
@@ -107,12 +115,5 @@ public class Client {
         this.password = password;
     }
 
-    public RolType getRol() {
-        return rol;
-    }
-
-    public void setRol(RolType rol) {
-        this.rol = rol;
-    }
 }
 

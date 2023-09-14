@@ -22,16 +22,16 @@ public class LoanController {
     private ClientService clientService;
 
     @Autowired
-    private AccountService accountService;
+    AccountService accountService;
 
     @Autowired
-    private LoanService loanService;
+    LoanService loanService;
 
     @Autowired
-    private ClientLoanService clientLoanService;
+    ClientLoanService clientLoanService;
 
     @Autowired
-    private TransactionService transactionService;
+    TransactionService transactionService;
 
     @Transactional
     @PreAuthorize("hasAuthority('CLIENT')")
